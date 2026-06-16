@@ -66,6 +66,15 @@ export interface StudioResponse {
   content: string;
 }
 
+/** A generated Studio result shown as a tab in the center area. */
+export interface StudioTab {
+  kind: StudioKind;
+  label: string;
+  content: string | null;
+  loading: boolean;
+  error: string | null;
+}
+
 /** A two-host podcast script: each line spoken by Host A or Host B. */
 export type DialogueSpeaker = "A" | "B";
 

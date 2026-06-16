@@ -62,14 +62,8 @@ export default function ChatPanel({ onCitationSelect }: ChatPanelProps) {
   }
 
   return (
-    <main className="flex h-full flex-1 flex-col bg-canvas">
-      <header className="flex items-center px-6 py-4">
-        <h2 className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
-          Chat
-        </h2>
-      </header>
-
-      <div className="flex-1 overflow-y-auto px-6 pb-4">
+    <div className="flex h-full flex-col bg-canvas">
+      <div className="flex-1 overflow-y-auto px-6 py-4">
         {messages.length === 0 && !isLoading ? (
           <div className="mx-auto mt-16 flex max-w-md flex-col items-center gap-2 text-center">
             <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-card text-lg">
@@ -151,6 +145,6 @@ export default function ChatPanel({ onCitationSelect }: ChatPanelProps) {
           </button>
         </div>
       </form>
-    </main>
+    </div>
   );
 }
