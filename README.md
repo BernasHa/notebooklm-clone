@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NotebookLM Clone
 
-## Getting Started
+A source-grounded research assistant: upload your documents, then chat with an AI that answers only from those sources, with inline citations that jump to the exact passage. Built as a take-home project.
 
-First, run the development server:
+Live demo: _[Vercel-Link — TBD]_
+Demo video: _[Loom-Link — TBD]_
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## What it does
+
+- Create a notebook and add multiple sources (PDF upload + pasted text)
+- Ask questions answered strictly from your sources — no outside knowledge
+- Inline citations: click a citation to jump to the exact source passage
+- Studio panel: one-click Summary, Study Guide, FAQ
+- _Audio Overview — optional stretch; remove this line if not built_
+
+## How it works (architecture)
+
+Ingestion: source → text extraction → chunking → embeddings → vector store.
+Query: question is embedded, top-k relevant chunks are retrieved, then passed to the chat model with instructions to answer only from those chunks and cite them.
+
+- **Frontend/Backend:** Next.js (TypeScript, App Router)
+- **Models:** OpenAI — `text-embedding-3-small` (embeddings), `gpt-4o-mini` (chat)
+- **Vector store:** SQLite + `sqlite-vec` (demo). Production: pgvector/Supabase.
+- **PDF parsing:** `pdf-parse`
+
+Flow:
+
+```
+Upload PDF/text ─► parse ─► sentence-aware chunk (keep char offsets) ─► embed ─► store (sqlite-vec)
+Ask question    ─► embed query ─► top-k vector search ─► grounded prompt ─► answer + [n] citations
+Each citation   ─► model returns a verbatim quote + source id (structured output)
+Click citation  ─► locate quote in the source's full text ─► highlight the exact supporting sentence
+Studio          ─► Summary / Study Guide / FAQ generated from the whole notebook
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Key decisions worth calling out:**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Quote-accurate citations, not chunk-accurate.** The model returns a verbatim quote per claim; the app locates that quote in the source text (whitespace-tolerant, with a fuzzy word-run fallback that snaps to sentence bounds) and highlights the exact sentence. This survives bad chunk boundaries and the model citing a neighbouring chunk.
+- **Sentence-aware chunking, no overlap.** Chunks break on real sentence/paragraph ends (single PDF line-wraps are treated as in-sentence whitespace), so highlights never cut mid-sentence. Zero overlap means each sentence lives in exactly one chunk → unambiguous citation mapping.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Scope decisions
 
-## Learn More
+Built deliberately around the core that defines NotebookLM — grounded answers with click-to-source citations — rather than chasing feature count. Intentionally left out (and why):
 
-To learn more about Next.js, take a look at the following resources:
+- **Auth / multi-user** — prototype scope; adds no value to the demo and would cost time better spent on the grounding core.
+- **Multiple notebooks** — MVP uses one default notebook; the schema already supports many, only the UI is single-notebook.
+- **Video overviews, infographics, mind maps** — peripheral to the source-grounding thesis; high build cost, low signal for this evaluation.
+- **Mobile layout** — desktop-first product; the 3-panel layout is the intended experience and responsive polish is out of scope.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## With more time
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- pgvector/Supabase instead of SQLite for real persistence + scaling (and a stable Vercel write path).
+- URL / YouTube sources (fetch + transcript ingestion) beyond PDF and pasted text.
+- Re-ranking retrieved chunks and an Interactive Audio Mode (Audio Overview).
 
-## Deploy on Vercel
+## Run locally
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm install
+# add OPENAI_API_KEY to .env.local
+npm run dev
+```
