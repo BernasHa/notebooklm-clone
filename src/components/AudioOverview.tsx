@@ -90,14 +90,14 @@ export default function AudioOverview() {
   return (
     <div className="flex flex-col gap-2 border-b border-neutral-200 p-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
           Audio Overview
         </h3>
         {status === "ready" && (
           <button
             type="button"
             onClick={generate}
-            className="text-xs font-medium text-neutral-500 hover:text-neutral-800"
+            className="rounded text-xs font-medium text-neutral-500 transition-colors hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             Regenerate
           </button>
@@ -109,7 +109,7 @@ export default function AudioOverview() {
           <button
             type="button"
             onClick={generate}
-            className="rounded-lg bg-neutral-900 px-3 py-2 text-sm font-medium text-white hover:bg-neutral-800"
+            className="rounded-lg bg-black px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             Generate Audio Overview
           </button>
@@ -118,23 +118,28 @@ export default function AudioOverview() {
           )}
         </>
       ) : status === "loading" ? (
-        <p className="text-sm text-neutral-400">
-          Generating a two-host conversation and synthesizing each line… this
-          calls TTS per line, so it takes a bit.
-        </p>
+        <div className="flex flex-col gap-2 rounded-lg border border-neutral-200 bg-white px-3 py-3">
+          <div className="h-1 w-full overflow-hidden rounded-full bg-neutral-100">
+            <div className="h-full w-1/3 animate-pulse rounded-full bg-accent" />
+          </div>
+          <p className="text-xs leading-relaxed text-neutral-500">
+            Writing a two-host conversation and synthesizing each line… this
+            calls TTS per line, so it takes a bit.
+          </p>
+        </div>
       ) : (
         <>
-          <div className="flex items-center gap-3 rounded-lg border border-neutral-200 bg-white px-3 py-2">
+          <div className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white px-3 py-2.5">
             <button
               type="button"
               onClick={togglePlay}
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-white"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-black text-xs text-white transition-colors hover:bg-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               aria-label={isPlaying ? "Pause" : "Play"}
             >
               {isPlaying ? "❚❚" : "▶"}
             </button>
             <div className="min-w-0 text-xs text-neutral-500">
-              <div className="font-medium text-neutral-700">
+              <div className="font-semibold text-black">
                 {SPEAKER_LABEL[clips[current].speaker]}
               </div>
               <div>
@@ -144,19 +149,19 @@ export default function AudioOverview() {
             </div>
           </div>
 
-          <ul className="mt-1 max-h-48 overflow-y-auto pr-1">
+          <ul className="mt-1 max-h-48 space-y-0.5 overflow-y-auto pr-1">
             {clips.map((clip, i) => (
               <li key={i}>
                 <button
                   type="button"
                   onClick={() => playFrom(i)}
-                  className={`block w-full rounded px-2 py-1 text-left text-xs ${
+                  className={`block w-full rounded-md px-2 py-1.5 text-left text-xs leading-relaxed transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
                     i === current
-                      ? "bg-blue-50 text-neutral-900"
-                      : "text-neutral-500 hover:bg-neutral-100"
+                      ? "bg-accent/30 text-black"
+                      : "text-neutral-500 hover:bg-neutral-100 hover:text-neutral-800"
                   }`}
                 >
-                  <span className="font-semibold">
+                  <span className="font-semibold text-black">
                     {SPEAKER_LABEL[clip.speaker]}:
                   </span>{" "}
                   {clip.text}

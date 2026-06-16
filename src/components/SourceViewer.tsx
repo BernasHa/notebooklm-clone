@@ -83,15 +83,15 @@ export default function SourceViewer({
 
   return (
     <div className="flex h-full flex-col">
-      <header className="flex items-center gap-2 border-b border-neutral-200 px-4 py-3">
+      <header className="flex items-center gap-2.5 border-b border-neutral-200 px-4 py-3">
         <button
           type="button"
           onClick={onClose}
-          className="rounded-md border border-neutral-200 bg-white px-2 py-1 text-xs font-medium text-neutral-600 hover:bg-neutral-100"
+          className="shrink-0 rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-xs font-medium text-neutral-700 transition-colors hover:border-black hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           ← Back
         </button>
-        <h2 className="truncate text-sm font-semibold text-neutral-800">
+        <h2 className="truncate text-sm font-semibold text-black">
           {isLoaded ? source.title : "Loading…"}
         </h2>
       </header>
@@ -102,13 +102,13 @@ export default function SourceViewer({
         ) : !isLoaded ? (
           <p className="text-sm text-neutral-400">Loading…</p>
         ) : (
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-neutral-700">
+          <p className="whitespace-pre-wrap text-sm leading-7 text-neutral-700">
             {highlight ? (
               <>
                 {content.slice(0, start)}
                 <mark
                   ref={markRef}
-                  className="rounded bg-yellow-200 text-neutral-900"
+                  className="rounded-[3px] bg-accent px-0.5 py-px font-medium text-black shadow-[0_0_0_1px_rgba(0,0,0,0.06)]"
                 >
                   {content.slice(start, end)}
                 </mark>

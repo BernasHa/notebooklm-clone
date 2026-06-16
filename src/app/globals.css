@@ -4,12 +4,14 @@
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  /* Accent — used sparingly for focus, active states, and the citation
+     highlight. Exposed as bg-accent / text-accent / ring-accent / border-accent. */
+  --color-accent: #faf070;
 }
 
 /*
- * Light, desktop-first app shell (see README scope decisions). The three-panel
- * layout owns its own neutral palette via Tailwind utilities, so we keep the
- * global base minimal and skip the scaffold's auto dark mode.
+ * Light, desktop-first app shell. Strict black / white / yellow-accent palette;
+ * neutrals carry the typographic hierarchy.
  */
 html,
 body {
@@ -18,6 +20,11 @@ body {
 
 body {
   background: #ffffff;
-  color: #171717;
+  color: #0a0a0a;
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Neutral selection so it never reads as the (yellow) citation highlight. */
+::selection {
+  background: rgba(10, 10, 10, 0.1);
 }

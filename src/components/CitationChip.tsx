@@ -9,24 +9,26 @@ interface CitationChipProps {
 
 /**
  * Inline citation marker rendered in place of `[n]`. Hover shows the source +
- * the verbatim quote; clicking highlights that passage in the source viewer.
- * Exact (quote-located) citations are blue; amber marks a fallback to the
- * retrieved chunk's bounds when the quote couldn't be located verbatim.
+ * verbatim quote; clicking highlights that passage in the source viewer.
+ *
+ * Two meanings, distinguished by fill (not just colour, so it survives the
+ * black/white palette): an exact quote-located citation is a solid black chip;
+ * a fallback to the retrieved chunk's bounds is a dashed outline chip.
  */
 export default function CitationChip({ citation, onSelect }: CitationChipProps) {
   const tooltip = `${citation.sourceTitle} — "${citation.snippet}"${
     citation.exact ? "" : " (approx.)"
   }`;
   const tone = citation.exact
-    ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
-    : "bg-amber-100 text-amber-700 hover:bg-amber-200";
+    ? "bg-black text-white hover:bg-neutral-700"
+    : "border border-dashed border-neutral-400 bg-white text-neutral-500 hover:border-black hover:text-black";
 
   return (
     <button
       type="button"
       onClick={() => onSelect?.(citation)}
       title={tooltip}
-      className={`mx-0.5 inline-flex h-4 min-w-4 items-center justify-center rounded px-1 align-baseline text-[10px] font-semibold ${tone}`}
+      className={`mx-0.5 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-md px-1 align-[1px] text-[10px] font-semibold leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${tone}`}
     >
       {citation.number}
     </button>
