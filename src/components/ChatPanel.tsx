@@ -62,7 +62,7 @@ export default function ChatPanel({ onCitationSelect }: ChatPanelProps) {
   }
 
   return (
-    <main className="flex h-full flex-1 flex-col bg-white">
+    <main className="flex h-full flex-1 flex-col bg-canvas">
       <header className="flex items-center px-6 py-4">
         <h2 className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
           Chat
@@ -72,13 +72,13 @@ export default function ChatPanel({ onCitationSelect }: ChatPanelProps) {
       <div className="flex-1 overflow-y-auto px-6 pb-4">
         {messages.length === 0 && !isLoading ? (
           <div className="mx-auto mt-16 flex max-w-md flex-col items-center gap-2 text-center">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-neutral-200 bg-neutral-50 text-lg">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-card text-lg">
               💬
             </span>
-            <p className="text-sm font-medium text-neutral-700">
+            <p className="text-sm font-medium text-neutral-200">
               Ask your sources
             </p>
-            <p className="text-sm leading-relaxed text-neutral-400">
+            <p className="text-sm leading-relaxed text-neutral-500">
               Answers come strictly from your sources, with citations you can
               click to jump to the exact passage.
             </p>
@@ -97,8 +97,8 @@ export default function ChatPanel({ onCitationSelect }: ChatPanelProps) {
                 <div
                   className={
                     message.role === "user"
-                      ? "max-w-[80%] rounded-2xl rounded-br-sm bg-black px-4 py-2.5 text-sm leading-relaxed text-white"
-                      : "max-w-[85%] rounded-2xl rounded-bl-sm bg-neutral-100 px-4 py-2.5 text-sm leading-relaxed text-neutral-800"
+                      ? "max-w-[80%] rounded-2xl rounded-br-sm bg-neutral-800 px-4 py-2.5 text-sm leading-relaxed text-white"
+                      : "max-w-[85%] rounded-2xl rounded-bl-sm border border-line bg-card px-4 py-2.5 text-sm leading-relaxed text-neutral-200"
                   }
                 >
                   {message.role === "assistant" ? (
@@ -115,11 +115,11 @@ export default function ChatPanel({ onCitationSelect }: ChatPanelProps) {
             ))}
             {isLoading && (
               <li className="flex justify-start">
-                <div className="flex max-w-[85%] items-center gap-2 rounded-2xl rounded-bl-sm bg-neutral-100 px-4 py-3 text-sm text-neutral-500">
+                <div className="flex max-w-[85%] items-center gap-2 rounded-2xl rounded-bl-sm border border-line bg-card px-4 py-3 text-sm text-neutral-400">
                   <span className="flex gap-1">
-                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-neutral-400 [animation-delay:-0.3s]" />
-                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-neutral-400 [animation-delay:-0.15s]" />
-                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-neutral-400" />
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-neutral-500 [animation-delay:-0.3s]" />
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-neutral-500 [animation-delay:-0.15s]" />
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-neutral-500" />
                   </span>
                   Thinking…
                 </div>
@@ -130,22 +130,22 @@ export default function ChatPanel({ onCitationSelect }: ChatPanelProps) {
         <div ref={endRef} />
       </div>
 
-      {error && <p className="px-6 pb-1 text-xs text-red-600">{error}</p>}
+      {error && <p className="px-6 pb-1 text-xs text-red-400">{error}</p>}
 
       <form onSubmit={handleSubmit} className="px-4 pb-4 pt-1">
-        <div className="flex items-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 py-2 transition-colors focus-within:border-black focus-within:ring-2 focus-within:ring-accent">
+        <div className="flex items-center gap-2 rounded-xl border border-line bg-card px-4 py-2 transition-colors focus-within:border-accent focus-within:ring-2 focus-within:ring-accent">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={isLoading}
             placeholder="Ask your sources…"
-            className="flex-1 bg-transparent text-sm text-black outline-none placeholder:text-neutral-400 disabled:opacity-60"
+            className="flex-1 bg-transparent text-sm text-white outline-none placeholder:text-neutral-500 disabled:opacity-60"
           />
           <button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="rounded-lg bg-black px-3.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:opacity-40"
+            className="rounded-lg bg-accent px-3.5 py-1.5 text-xs font-semibold text-black transition-colors hover:bg-[#f4ea66] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-card disabled:opacity-40"
           >
             {isLoading ? "…" : "Send"}
           </button>

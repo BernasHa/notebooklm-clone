@@ -83,32 +83,32 @@ export default function SourceViewer({
 
   return (
     <div className="flex h-full flex-col">
-      <header className="flex items-center gap-2.5 border-b border-neutral-200 px-4 py-3">
+      <header className="flex items-center gap-2.5 border-b border-line px-4 py-3">
         <button
           type="button"
           onClick={onClose}
-          className="shrink-0 rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-xs font-medium text-neutral-700 transition-colors hover:border-black hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          className="shrink-0 rounded-lg border border-line bg-transparent px-2.5 py-1.5 text-xs font-medium text-neutral-300 transition-colors hover:border-white hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           ← Back
         </button>
-        <h2 className="truncate text-sm font-semibold text-black">
+        <h2 className="truncate text-sm font-semibold text-white">
           {isLoaded ? source.title : "Loading…"}
         </h2>
       </header>
 
       <div className="flex-1 overflow-y-auto px-4 py-3">
         {showError ? (
-          <p className="text-sm text-red-600">{error.message}</p>
+          <p className="text-sm text-red-400">{error.message}</p>
         ) : !isLoaded ? (
-          <p className="text-sm text-neutral-400">Loading…</p>
+          <p className="text-sm text-neutral-500">Loading…</p>
         ) : (
-          <p className="whitespace-pre-wrap text-sm leading-7 text-neutral-700">
+          <p className="whitespace-pre-wrap text-sm leading-7 text-neutral-300">
             {highlight ? (
               <>
                 {content.slice(0, start)}
                 <mark
                   ref={markRef}
-                  className="rounded-[3px] bg-accent px-0.5 py-px font-medium text-black shadow-[0_0_0_1px_rgba(0,0,0,0.06)]"
+                  className="rounded-[3px] bg-accent px-0.5 py-px font-medium text-black shadow-[0_0_0_1px_rgba(250,240,112,0.35)]"
                 >
                   {content.slice(start, end)}
                 </mark>

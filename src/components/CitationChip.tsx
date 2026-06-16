@@ -20,8 +20,8 @@ export default function CitationChip({ citation, onSelect }: CitationChipProps) 
     citation.exact ? "" : " (approx.)"
   }`;
   const tone = citation.exact
-    ? "bg-black text-white hover:bg-neutral-700"
-    : "border border-dashed border-neutral-400 bg-white text-neutral-500 hover:border-black hover:text-black";
+    ? "bg-white text-black hover:bg-neutral-300"
+    : "border border-dashed border-neutral-600 bg-transparent text-neutral-400 hover:border-white hover:text-white";
 
   return (
     <button

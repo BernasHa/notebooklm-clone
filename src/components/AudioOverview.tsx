@@ -97,7 +97,7 @@ export default function AudioOverview() {
           <button
             type="button"
             onClick={generate}
-            className="rounded text-xs font-medium text-neutral-500 transition-colors hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="rounded text-xs font-medium text-neutral-500 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             Regenerate
           </button>
@@ -109,37 +109,37 @@ export default function AudioOverview() {
           <button
             type="button"
             onClick={generate}
-            className="rounded-lg bg-black px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-black transition-colors hover:bg-[#f4ea66] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-panel"
           >
             Generate Audio Overview
           </button>
           {status === "error" && error && (
-            <p className="text-xs text-red-600">{error}</p>
+            <p className="text-xs text-red-400">{error}</p>
           )}
         </>
       ) : status === "loading" ? (
-        <div className="flex flex-col gap-2 rounded-lg border border-neutral-200 bg-white px-3 py-3">
-          <div className="h-1 w-full overflow-hidden rounded-full bg-neutral-100">
+        <div className="flex flex-col gap-2 rounded-lg border border-line bg-card px-3 py-3">
+          <div className="h-1 w-full overflow-hidden rounded-full bg-neutral-800">
             <div className="h-full w-1/3 animate-pulse rounded-full bg-accent" />
           </div>
-          <p className="text-xs leading-relaxed text-neutral-500">
+          <p className="text-xs leading-relaxed text-neutral-400">
             Writing a two-host conversation and synthesizing each line… this
             calls TTS per line, so it takes a bit.
           </p>
         </div>
       ) : (
         <>
-          <div className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white px-3 py-2.5">
+          <div className="flex items-center gap-3 rounded-xl border border-line bg-card px-3 py-2.5">
             <button
               type="button"
               onClick={togglePlay}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-black text-xs text-white transition-colors hover:bg-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-xs text-black transition-colors hover:bg-[#f4ea66] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-card"
               aria-label={isPlaying ? "Pause" : "Play"}
             >
               {isPlaying ? "❚❚" : "▶"}
             </button>
             <div className="min-w-0 text-xs text-neutral-500">
-              <div className="font-semibold text-black">
+              <div className="font-semibold text-white">
                 {SPEAKER_LABEL[clips[current].speaker]}
               </div>
               <div>
@@ -157,11 +157,11 @@ export default function AudioOverview() {
                   onClick={() => playFrom(i)}
                   className={`block w-full rounded-md px-2 py-1.5 text-left text-xs leading-relaxed transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
                     i === current
-                      ? "bg-accent/30 text-black"
-                      : "text-neutral-500 hover:bg-neutral-100 hover:text-neutral-800"
+                      ? "bg-accent/20 text-white"
+                      : "text-neutral-500 hover:bg-white/5 hover:text-neutral-200"
                   }`}
                 >
-                  <span className="font-semibold text-black">
+                  <span className="font-semibold text-white">
                     {SPEAKER_LABEL[clip.speaker]}:
                   </span>{" "}
                   {clip.text}
