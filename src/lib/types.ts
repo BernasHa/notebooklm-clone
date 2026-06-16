@@ -65,3 +65,25 @@ export interface StudioResponse {
   kind: StudioKind;
   content: string;
 }
+
+/** A two-host podcast script: each line spoken by Host A or Host B. */
+export type DialogueSpeaker = "A" | "B";
+
+export interface DialogueLine {
+  speaker: DialogueSpeaker;
+  text: string;
+}
+
+export interface AudioScript {
+  script: DialogueLine[];
+}
+
+/** A synthesized dialogue line: its text plus an mp3 data URI for playback. */
+export interface AudioClip extends DialogueLine {
+  audio: string;
+}
+
+/** Audio Overview result: ordered clips played as a browser-side playlist. */
+export interface AudioOverviewResponse {
+  clips: AudioClip[];
+}

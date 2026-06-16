@@ -3,6 +3,7 @@
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import type { StudioKind, StudioResponse } from "@/lib/types";
+import AudioOverview from "./AudioOverview";
 
 const ACTIONS: { kind: StudioKind; label: string }[] = [
   { kind: "summary", label: "Summary" },
@@ -57,6 +58,8 @@ export default function StudioPanel() {
       <header className="border-b border-neutral-200 px-4 py-3">
         <h2 className="text-sm font-semibold text-neutral-700">Studio</h2>
       </header>
+
+      <AudioOverview />
 
       <div className="flex flex-col gap-2 border-b border-neutral-200 p-4">
         {ACTIONS.map((action) => (

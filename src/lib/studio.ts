@@ -1,9 +1,6 @@
 import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 import type { SourceDetail, StudioKind } from "./types";
-
-// Cap the concatenated context so a large notebook can't blow the token budget.
-// ~48k chars ≈ 12k tokens, comfortable for gpt-4o-mini.
-const MAX_CONTEXT_CHARS = 48000;
+import { renderNotebookContext } from "./notebook-context";
 
 interface StudioConfig {
   label: string;
@@ -30,27 +27,13 @@ export const STUDIO_CONFIG: Record<StudioKind, StudioConfig> = {
 
 const SYSTEM_BASE = `You generate study material STRICTLY from the provided sources of a single notebook. Use only information present in the sources — never add outside knowledge. If the sources are thin on a point, stay brief rather than inventing. Output clean GitHub-flavored Markdown and nothing else (no preamble like "Here is...").`;
 
-/** Concatenate labelled source contents up to the context budget. */
-function renderSources(sources: SourceDetail[]): string {
-  let out = "";
-  for (const source of sources) {
-    const block = `# Source: ${source.title}\n${source.content.trim()}\n\n`;
-    if (out.length + block.length > MAX_CONTEXT_CHARS) {
-      out += block.slice(0, Math.max(0, MAX_CONTEXT_CHARS - out.length));
-      break;
-    }
-    out += block;
-  }
-  return out.trim();
-}
-
 /** Build the messages for a Studio generation over the whole notebook. */
 export function buildStudioMessages(
   kind: StudioKind,
   sources: SourceDetail[]
 ): ChatCompletionMessageParam[] {
   const system = `${SYSTEM_BASE}\n\n${STUDIO_CONFIG[kind].instruction}`;
-  const user = `Sources:\n\n${renderSources(sources)}`;
+  const user = `Sources:\n\n${renderNotebookContext(sources)}`;
   return [
     { role: "system", content: system },
     { role: "user", content: user },
