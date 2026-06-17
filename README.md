@@ -2,8 +2,7 @@
 
 A source-grounded research assistant: upload your documents, then chat with an AI that answers only from those sources, with inline citations that jump to the exact passage. Built as a take-home project.
 
-Live demo: _[link — TBD]_
-Demo video: _[link — TBD]_
+Demo video: https://www.loom.com/share/ac9b636ecc924cbbbf3f8c1471377981
 
 ## What it does
 
