@@ -9,7 +9,12 @@ import * as sqliteVec from "sqlite-vec";
  */
 export const EMBEDDING_DIM = 1536;
 
-const DB_DIR = path.join(process.cwd(), "data");
+// Data directory is configurable so a persistent volume can be mounted in
+// production (e.g. Railway: mount a volume and set DATA_DIR=/data). Defaults to
+// ./data, created automatically on first use.
+const DB_DIR = process.env.DATA_DIR
+  ? path.resolve(process.env.DATA_DIR)
+  : path.join(process.cwd(), "data");
 const DB_PATH = path.join(DB_DIR, "notebooklm.db");
 
 /**

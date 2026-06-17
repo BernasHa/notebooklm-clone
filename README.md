@@ -56,7 +56,7 @@ Built deliberately around the core that defines NotebookLM — grounded answers 
 
 ## Run locally
 
-Requires Node 18+ and an OpenAI API key.
+Requires Node 20+ and an OpenAI API key.
 
 ```bash
 npm install
@@ -66,3 +66,19 @@ npm run dev
 
 Open http://localhost:3000. The SQLite database is created automatically on first
 use under `data/` (gitignored). Add a source, then ask a question.
+
+## Deploy (Railway)
+
+Deployed as a Node server (not serverless) because `better-sqlite3` + `sqlite-vec`
+need a writable filesystem — which Vercel's serverless functions don't provide.
+
+1. Create a Railway project from this repo. Nixpacks auto-detects Next.js and runs
+   `npm install` → `npm run build`; the start command is `npm start` (`next start`,
+   which binds to `process.env.PORT`). See [`railway.json`](./railway.json).
+2. Set the env var **`OPENAI_API_KEY`**.
+3. On first boot the app **seeds an example source** ("The Printing Press") into a
+   default notebook, so the app has content immediately. The `data/` dir + SQLite
+   DB are created automatically.
+4. _(Optional, for persistence across redeploys)_ attach a Railway volume and set
+   **`DATA_DIR`** to its mount path (e.g. `/data`). Without a volume the DB is
+   ephemeral and simply re-seeds on a fresh deploy.
