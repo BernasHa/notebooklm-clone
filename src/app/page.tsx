@@ -7,7 +7,7 @@ import NotebookView from "@/components/NotebookView";
  */
 export default function Home() {
   return (
-    <div className="flex h-screen flex-col bg-canvas">
+    <div className="flex h-dvh flex-col bg-canvas">
       <header className="flex h-14 shrink-0 items-center gap-3 border-b border-line bg-canvas px-6">
         <div className="flex items-center gap-2.5">
           <span className="flex h-6 w-6 items-center justify-center rounded-md bg-accent">

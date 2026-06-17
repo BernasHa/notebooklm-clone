@@ -14,6 +14,8 @@ interface StudioPanelProps {
   tabs: StudioTab[];
   activeKind: StudioKind | null;
   onGenerate: (kind: StudioKind) => void;
+  /** Whether this panel is the visible one on narrow screens. */
+  mobileActive: boolean;
 }
 
 /**
@@ -25,9 +27,14 @@ export default function StudioPanel({
   tabs,
   activeKind,
   onGenerate,
+  mobileActive,
 }: StudioPanelProps) {
   return (
-    <aside className="flex h-full w-80 shrink-0 flex-col border-l border-line bg-panel">
+    <aside
+      className={`${
+        mobileActive ? "flex" : "hidden"
+      } h-full w-full shrink-0 flex-col border-l border-line bg-panel lg:flex lg:w-80`}
+    >
       <header className="flex items-center px-5 py-4">
         <h2 className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
           Studio

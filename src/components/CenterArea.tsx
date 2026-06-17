@@ -12,6 +12,8 @@ interface CenterAreaProps {
   active: CenterTab;
   onSelect: (tab: CenterTab) => void;
   onClose: (kind: StudioKind) => void;
+  /** Whether the center is the visible panel on narrow screens. */
+  mobileActive: boolean;
 }
 
 interface TabButtonProps {
@@ -66,9 +68,14 @@ export default function CenterArea({
   active,
   onSelect,
   onClose,
+  mobileActive,
 }: CenterAreaProps) {
   return (
-    <main className="flex h-full min-w-0 flex-1 flex-col bg-canvas">
+    <main
+      className={`${
+        mobileActive ? "flex" : "hidden"
+      } h-full min-w-0 flex-1 flex-col bg-canvas lg:flex`}
+    >
       <div className="flex items-center gap-1 border-b border-line px-3">
         <TabButton
           label="Chat"

@@ -14,6 +14,8 @@ interface SourcesPanelProps {
   viewer: ViewerState | null;
   onOpenSource: (sourceId: number) => void;
   onCloseViewer: () => void;
+  /** Whether this panel is the visible one on narrow screens. */
+  mobileActive: boolean;
 }
 
 /**
@@ -25,7 +27,11 @@ export default function SourcesPanel({
   viewer,
   onOpenSource,
   onCloseViewer,
+  mobileActive,
 }: SourcesPanelProps) {
+  // Mobile: full width, shown only when this is the active tab. Desktop (lg+):
+  // always shown at its fixed width.
+  const visibility = `${mobileActive ? "flex" : "hidden"} lg:flex`;
   const [sources, setSources] = useState<SourceSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -86,7 +92,9 @@ export default function SourcesPanel({
 
   if (viewer) {
     return (
-      <aside className="flex h-full w-80 shrink-0 flex-col border-r border-line bg-panel">
+      <aside
+        className={`${visibility} h-full w-full shrink-0 flex-col border-r border-line bg-panel lg:w-80`}
+      >
         <SourceViewer
           sourceId={viewer.sourceId}
           highlight={viewer.highlight}
@@ -97,7 +105,9 @@ export default function SourcesPanel({
   }
 
   return (
-    <aside className="flex h-full w-72 shrink-0 flex-col border-r border-line bg-panel">
+    <aside
+      className={`${visibility} h-full w-full shrink-0 flex-col border-r border-line bg-panel lg:w-72`}
+    >
       <header className="flex items-center justify-between px-5 py-4">
         <h2 className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
           Sources

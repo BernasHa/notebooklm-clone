@@ -11,6 +11,7 @@ import SourcesPanel, { type ViewerState } from "./SourcesPanel";
 import ChatPanel from "./ChatPanel";
 import StudioPanel, { STUDIO_ACTIONS } from "./StudioPanel";
 import CenterArea from "./CenterArea";
+import MobileTabBar, { type MobileView } from "./MobileTabBar";
 
 type CenterTab = "chat" | StudioKind;
 
@@ -26,6 +27,9 @@ export default function NotebookView() {
   const [viewer, setViewer] = useState<ViewerState | null>(null);
   const [studioTabs, setStudioTabs] = useState<StudioTab[]>([]);
   const [activeCenter, setActiveCenter] = useState<CenterTab>("chat");
+  // Which single panel is visible on narrow screens (ignored at lg+ where all
+  // three panels show side by side).
+  const [mobileView, setMobileView] = useState<MobileView>("sources");
   // Fresh start on every page load: clear the notebook's sources/chunks/vectors
   // before rendering the panels. Chat history and Studio tabs are client state,
   // so they reset naturally on reload.
@@ -52,6 +56,8 @@ export default function NotebookView() {
       sourceId: citation.sourceId,
       highlight: { start: citation.startOffset, end: citation.endOffset },
     });
+    // On mobile the panels aren't all visible — bring the source viewer forward.
+    setMobileView("sources");
   }
 
   async function generateStudio(kind: StudioKind) {
@@ -68,6 +74,8 @@ export default function NotebookView() {
         : [...prev, fresh];
     });
     setActiveCenter(kind);
+    // The result opens as a center tab — surface the center view on mobile.
+    setMobileView("center");
 
     try {
       const res = await fetch("/api/studio", {
@@ -110,24 +118,30 @@ export default function NotebookView() {
   }
 
   return (
-    <div className="flex min-h-0 flex-1">
-      <SourcesPanel
-        viewer={viewer}
-        onOpenSource={(sourceId) => setViewer({ sourceId, highlight: null })}
-        onCloseViewer={() => setViewer(null)}
-      />
-      <CenterArea
-        chat={<ChatPanel onCitationSelect={handleCitationSelect} />}
-        tabs={studioTabs}
-        active={activeCenter}
-        onSelect={setActiveCenter}
-        onClose={closeTab}
-      />
-      <StudioPanel
-        tabs={studioTabs}
-        activeKind={activeKind}
-        onGenerate={generateStudio}
-      />
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div className="flex min-h-0 flex-1">
+        <SourcesPanel
+          mobileActive={mobileView === "sources"}
+          viewer={viewer}
+          onOpenSource={(sourceId) => setViewer({ sourceId, highlight: null })}
+          onCloseViewer={() => setViewer(null)}
+        />
+        <CenterArea
+          mobileActive={mobileView === "center"}
+          chat={<ChatPanel onCitationSelect={handleCitationSelect} />}
+          tabs={studioTabs}
+          active={activeCenter}
+          onSelect={setActiveCenter}
+          onClose={closeTab}
+        />
+        <StudioPanel
+          mobileActive={mobileView === "studio"}
+          tabs={studioTabs}
+          activeKind={activeKind}
+          onGenerate={generateStudio}
+        />
+      </div>
+      <MobileTabBar active={mobileView} onChange={setMobileView} />
     </div>
   );
 }

@@ -127,19 +127,19 @@ export default function ChatPanel({ onCitationSelect }: ChatPanelProps) {
       {error && <p className="px-6 pb-1 text-xs text-red-400">{error}</p>}
 
       <form onSubmit={handleSubmit} className="px-4 pb-4 pt-1">
-        <div className="flex items-center gap-2 rounded-xl border border-line bg-card px-4 py-2 transition-colors focus-within:border-accent focus-within:ring-2 focus-within:ring-accent">
+        <div className="flex items-center gap-2 rounded-xl border border-line bg-card px-4 py-2.5 transition-colors focus-within:border-accent focus-within:ring-2 focus-within:ring-accent lg:py-2">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={isLoading}
             placeholder="Ask your sources…"
-            className="flex-1 bg-transparent text-sm text-white outline-none placeholder:text-neutral-500 disabled:opacity-60"
+            className="flex-1 bg-transparent text-base text-white outline-none placeholder:text-neutral-500 disabled:opacity-60 lg:text-sm"
           />
           <button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="rounded-lg bg-accent px-3.5 py-1.5 text-xs font-semibold text-black transition-colors hover:bg-[#f4ea66] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-card disabled:opacity-40"
+            className="rounded-lg bg-accent px-3.5 py-2 text-sm font-semibold text-black transition-colors hover:bg-[#f4ea66] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-card disabled:opacity-40 lg:py-1.5 lg:text-xs"
           >
             {isLoading ? "…" : "Send"}
           </button>
