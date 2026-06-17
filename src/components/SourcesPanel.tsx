@@ -31,6 +31,7 @@ export default function SourcesPanel({
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -64,6 +65,23 @@ export default function SourcesPanel({
     setShowForm(false);
     setLoading(true);
     setReloadKey((k) => k + 1);
+  }
+
+  async function handleDelete(id: number) {
+    if (deletingId !== null) return;
+    setDeletingId(id);
+    try {
+      const res = await fetch(`/api/sources/${id}`, { method: "DELETE" });
+      const json = await res.json().catch(() => null);
+      if (!res.ok || !json?.ok) {
+        throw new Error(json?.error ?? "Failed to delete source.");
+      }
+      setReloadKey((k) => k + 1);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to delete source.");
+    } finally {
+      setDeletingId(null);
+    }
   }
 
   if (viewer) {
@@ -119,24 +137,43 @@ export default function SourcesPanel({
         ) : (
           <ul className="flex flex-col gap-1.5">
             {sources.map((source) => (
-              <li key={source.id}>
+              <li key={source.id} className="group relative">
                 <button
                   type="button"
                   onClick={() => onOpenSource(source.id)}
-                  className="w-full rounded-xl border border-line bg-card px-3 py-2.5 text-left transition-colors hover:border-neutral-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                  className="w-full rounded-xl border border-line bg-card px-3 py-2.5 pr-9 text-left transition-colors hover:border-neutral-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="truncate text-sm font-medium text-white">
-                      {source.title}
-                    </span>
-                    <span className="shrink-0 rounded-md bg-white/5 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-neutral-400">
+                  <span className="block truncate text-sm font-medium text-white">
+                    {source.title}
+                  </span>
+                  <span className="mt-1.5 flex items-center gap-2">
+                    <span className="rounded-md bg-white/5 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-neutral-400">
                       {source.type}
                     </span>
-                  </div>
-                  <p className="mt-1 text-xs text-neutral-500">
-                    {source.chunkCount}{" "}
-                    {source.chunkCount === 1 ? "chunk" : "chunks"}
-                  </p>
+                    <span className="text-xs text-neutral-500">
+                      {source.chunkCount}{" "}
+                      {source.chunkCount === 1 ? "chunk" : "chunks"}
+                    </span>
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(source.id)}
+                  disabled={deletingId === source.id}
+                  aria-label={`Delete ${source.title}`}
+                  className="absolute right-2 top-2 rounded-md p-1.5 text-neutral-500 opacity-0 transition hover:bg-white/10 hover:text-white focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent group-hover:opacity-100 disabled:opacity-40"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-3.5 w-3.5"
+                  >
+                    <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6m5 4v6m4-6v6" />
+                  </svg>
                 </button>
               </li>
             ))}

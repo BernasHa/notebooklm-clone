@@ -99,6 +99,38 @@ export function getSourceSummary(id: number): SourceSummary {
     .get(id) as SourceSummary;
 }
 
+/**
+ * Delete a source with its chunks and vectors. Chunks are FK-cascaded when the
+ * source row is removed, but vec_chunks (a vec0 virtual table) is not covered by
+ * foreign keys, so its rows are deleted explicitly by chunk rowid first.
+ */
+export function deleteSource(id: number): void {
+  const db = getDb();
+  const run = db.transaction((sourceId: number) => {
+    const chunkIds = db
+      .prepare("SELECT id FROM chunks WHERE source_id = ?")
+      .all(sourceId) as { id: number }[];
+    const deleteVec = db.prepare("DELETE FROM vec_chunks WHERE rowid = ?");
+    for (const { id: chunkId } of chunkIds) deleteVec.run(BigInt(chunkId));
+    db.prepare("DELETE FROM sources WHERE id = ?").run(sourceId);
+  });
+  run(id);
+}
+
+/** Remove every source (+ chunks + vectors) from a notebook. */
+export function clearNotebook(notebookId: number): void {
+  const db = getDb();
+  const run = db.transaction((nbId: number) => {
+    const chunkIds = db
+      .prepare("SELECT id FROM chunks WHERE notebook_id = ?")
+      .all(nbId) as { id: number }[];
+    const deleteVec = db.prepare("DELETE FROM vec_chunks WHERE rowid = ?");
+    for (const { id: chunkId } of chunkIds) deleteVec.run(BigInt(chunkId));
+    db.prepare("DELETE FROM sources WHERE notebook_id = ?").run(nbId);
+  });
+  run(notebookId);
+}
+
 /** Full source incl. content, for the source viewer / highlight jumps. */
 export function getSourceDetail(id: number): SourceDetail | undefined {
   const db = getDb();

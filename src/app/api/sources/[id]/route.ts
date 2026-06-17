@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSourceDetail } from "@/lib/repository";
+import { deleteSource, getSourceDetail } from "@/lib/repository";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -28,6 +28,36 @@ export async function GET(
     }
 
     return NextResponse.json({ ok: true, data: source });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Unexpected error";
+    return NextResponse.json({ ok: false, error: message }, { status: 500 });
+  }
+}
+
+/** Delete a single source incl. its chunks and vectors. */
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const numericId = Number(id);
+    if (!Number.isInteger(numericId) || numericId <= 0) {
+      return NextResponse.json(
+        { ok: false, error: "Invalid source id." },
+        { status: 400 }
+      );
+    }
+
+    if (!getSourceDetail(numericId)) {
+      return NextResponse.json(
+        { ok: false, error: "Source not found." },
+        { status: 404 }
+      );
+    }
+
+    deleteSource(numericId);
+    return NextResponse.json({ ok: true });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unexpected error";
     return NextResponse.json({ ok: false, error: message }, { status: 500 });

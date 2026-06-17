@@ -77,9 +77,9 @@ need a writable filesystem — which Vercel's serverless functions don't provide
    `npm install` → `npm run build`; the start command is `npm start` (`next start`,
    which binds to `process.env.PORT`). See [`railway.json`](./railway.json).
 2. Set the env var **`OPENAI_API_KEY`**.
-3. On first boot the app **seeds an example source** ("The Printing Press") into a
-   default notebook, so the app has content immediately. The `data/` dir + SQLite
-   DB are created automatically.
+3. The `data/` dir + SQLite DB are created automatically. For the demo, **every
+   page reload starts the notebook fresh** (sources/chunks/vectors are cleared on
+   load) — so just upload a PDF or paste text, then ask.
 4. _(Optional, for persistence across redeploys)_ attach a Railway volume and set
    **`DATA_DIR`** to its mount path (e.g. `/data`). Without a volume the DB is
    ephemeral and simply re-seeds on a fresh deploy.

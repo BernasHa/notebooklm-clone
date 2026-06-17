@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type {
   Citation,
   StudioKind,
@@ -26,6 +26,26 @@ export default function NotebookView() {
   const [viewer, setViewer] = useState<ViewerState | null>(null);
   const [studioTabs, setStudioTabs] = useState<StudioTab[]>([]);
   const [activeCenter, setActiveCenter] = useState<CenterTab>("chat");
+  // Fresh start on every page load: clear the notebook's sources/chunks/vectors
+  // before rendering the panels. Chat history and Studio tabs are client state,
+  // so they reset naturally on reload.
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        await fetch("/api/sources", { method: "DELETE" });
+      } catch {
+        // Ignore — still let the app render so it never hangs on reset.
+      } finally {
+        if (!cancelled) setReady(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   function handleCitationSelect(citation: Citation) {
     setViewer({
@@ -80,6 +100,14 @@ export default function NotebookView() {
   }
 
   const activeKind = activeCenter === "chat" ? null : activeCenter;
+
+  if (!ready) {
+    return (
+      <div className="flex flex-1 items-center justify-center bg-canvas text-sm text-neutral-500">
+        Preparing…
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-0 flex-1">

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import {
+  clearNotebook,
   getOrCreateDefaultNotebook,
   listSources,
 } from "@/lib/repository";
@@ -74,6 +75,20 @@ export async function POST(request: NextRequest) {
     }
 
     return badRequest("Unknown source type (expected 'pdf' or 'text').");
+  } catch (err) {
+    return NextResponse.json(
+      { ok: false, error: errorMessage(err) },
+      { status: 500 }
+    );
+  }
+}
+
+/** Clear the whole default notebook (sources + chunks + vectors). */
+export async function DELETE() {
+  try {
+    const notebookId = getOrCreateDefaultNotebook();
+    clearNotebook(notebookId);
+    return NextResponse.json({ ok: true });
   } catch (err) {
     return NextResponse.json(
       { ok: false, error: errorMessage(err) },
