@@ -2,6 +2,7 @@
 
 A source-grounded research assistant: upload your documents, then chat with an AI that answers only from those sources, with inline citations that jump to the exact passage. Built as a take-home project.
 
+Live demo: https://intuitive-success-production.up.railway.app
 Demo video: https://www.loom.com/share/ac9b636ecc924cbbbf3f8c1471377981
 
 ## What it does
